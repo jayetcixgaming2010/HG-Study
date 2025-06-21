@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Server Discord Học Tập Cấp 3 - cộng đồng học tập năng động với tài liệu miễn phí, mentor 24/7, và sự kiện thú vị.">
+    <meta name="keywords" content="học tập, Discord, học sinh cấp 3, tài liệu miễn phí, mentor, ôn thi">
+    <meta name="author" content="Server Discord Học Tập Cấp 3">
+    <title>Server Discord Học Tập Cấp 3</title>
+    <link rel="icon" type="image/png" href="https://images.unsplash.com/photo-1516321310760-4f3c1d79e485?auto=format&fit=crop&w=32&q=80">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <base href="{{ site.baseurl }}">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            transition: background 0.5s ease, color 0.5s ease; 
+            will-change: background, color; 
+            overflow-x: hidden; 
+        }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .dark body { background: linear-gradient(to bottom, #1a202c, #2d3748); color: #e2e8f0; }
+        .gradient-text { 
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6, #3B82F6); 
+            background-size: 200%; 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+            animation: gradientShift 5s ease infinite; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            transition: letter-spacing 0.3s; 
+        }
+        .gradient-text:hover { letter-spacing: 1px; }
+        @keyframes gradientShift { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        .btn-cta { 
+            position: relative; 
+            overflow: hidden; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6); 
+            background-size: 200%; 
+            animation: gradientShift 5s ease infinite; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            transform: perspective(500px) rotateX(0deg); 
+        }
+        .btn-cta:hover { 
+            transform: perspective(500px) rotateX(5deg); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+        }
+        .btn-cta:active { 
+            transform: perspective(500px) rotateX(0deg) scale(0.95); 
+        }
+        .btn-cta::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 0; 
+            height: 0; 
+            background: rgba(255,255,255,0.3); 
+            border-radius: 50%; 
+            transform: translate(-50%,-50%); 
+            transition: width 0.4s, height 0.4s; 
+        }
+        .btn-cta:active::after { 
+            width: 300px; 
+            height: 300px; 
+        }
+        .card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        .card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 10px 28px rgba(0,0,0,0.25); 
+        }
+        .fade-in { opacity: 1; transform: translateY(0); }
+        .slide-up { opacity: 1; transform: translateY(0); }
+        #scrollTopBtn { 
+            display: none; 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            z-index: 100; 
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6); 
+            animation: pulse 2s infinite; 
+            transition: transform 0.3s, opacity 0.3s; 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 5px; 
+        }
+        #scrollTopBtn:hover { 
+            transform: rotate(360deg); 
+            opacity: 1; 
+        }
+        @keyframes pulse { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.1); } 
+            100% { transform: scale(1); } 
+        }
+        .parallax-bg { 
+            background-attachment: fixed; 
+            background-size: cover; 
+            background-position: center; 
+        }
+        .carousel-slide { 
+            display: none; 
+            opacity: 0; 
+            transform: translateX(50px) scale(0.95); 
+            transition: opacity 0.7s ease, transform 0.7s ease; 
+        }
+        .carousel-slide.active { 
+            display: block; 
+            opacity: 1; 
+            transform: translateX(0) scale(1); 
+        }
+        .carousel-dot { 
+            width: 12px; 
+            height: 12px; 
+            background: #ccc; 
+            border-radius: 50%; 
+            margin: 0 6px; 
+            cursor: pointer; 
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s; 
+        }
+        .carousel-dot:hover, .carousel-dot.active { 
+            background: #3B82F6; 
+            transform: scale(1.2); 
+            box-shadow: 0 0 10px rgba(59,130,246,0.5); 
+        }
+        .accordion-toggle { 
+            cursor: pointer; 
+            transition: background 0.3s; 
+        }
+        .accordion-toggle:hover { 
+            background: rgba(0,0,0,0.05); 
+        }
+        .accordion-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.4s ease; 
+        }
+        .accordion-content.active { 
+            max-height: 500px; 
+        }
+        .accordion-toggle svg { 
+            transition: transform 0.3s; 
+        }
+        .accordion-toggle.active svg { 
+            transform: rotate(180deg); 
+        }
+        .frosted-glass { 
+            background: rgba(255,255,255,0.15); 
+            backdrop-filter: blur(12px); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        }
+        .dark .frosted-glass { 
+            background: rgba(0,0,0,0.3); 
+        }
+        .social-icon { 
+            transition: transform 0.3s ease, color 0.3s, opacity 0.3s; 
+        }
+        .social-icon:hover { 
+            transform: scale(1.3) rotate(15deg); 
+            color: #8B5CF6; 
+        }
+        .social-icon.disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
+        .tab { 
+            cursor: pointer; 
+            transition: background 0.3s, color 0.3s; 
+        }
+        .tab:hover { 
+            background: rgba(0,0,0,0.05); 
+        }
+        .tab.active { 
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6); 
+            color: white; 
+        }
+        .tab-content { 
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.5s ease; 
+        }
+        .tab-content.active { 
+            display: block; 
+            opacity: 1; 
+        }
+        #preloader { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6); 
+            z-index: 9999; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            transition: opacity 0.5s ease; 
+        }
+        #preloader-logo { 
+            animation: pulseLogo 1.5s infinite; 
+        }
+        @keyframes pulseLogo { 
+            0% { transform: scale(1) rotate(0deg); } 
+            50% { transform: scale(1.2) rotate(10deg); } 
+            100% { transform: scale(1) rotate(0deg); } 
+        }
+        .music-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 90px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .music-controls.dark {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        #darkModeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+            padding: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        #darkModeToggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        canvas {
+            will-change: transform;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-gray-50 to-gray-200">
+    <!-- Preloader -->
+    <div id="preloader" role="status" aria-label="Đang tải trang">
+        <div id="preloader-logo" class="text-4xl font-bold gradient-text">Discord Học Tập</div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="text-white" aria-label="Chuyển đổi chế độ tối">
+        <svg id="darkModeIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+    </button>
+
+    <!-- Navbar -->
+    <nav class="frosted-glass text-white fixed top-0 w-full z-40" style="height: 70px;">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center h-full">
+            <a href="#" class="text-2xl font-bold gradient-text" style="animation: pulseLogo 2s infinite;">Discord Học Tập</a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#gioi-thieu" class="hover:text-gray-200 transition-colors gradient-text">Giới Thiệu</a>
+                <a href="#tinh-nang" class="hover:text-gray-200 transition-colors gradient-text">Tính Năng</a>
+                <a href="#tham-gia" class="hover:text-gray-200 transition-colors gradient-text">Tham Gia</a>
+                <a href="#nhan-thong-bao" class="hover:text-gray-200 transition-colors gradient-text">Nhận Thông Báo</a>
+                <a href="#faq" class="hover:text-gray-200 transition-colors gradient-text">FAQ</a>
+                <a href="#lien-he" class="hover:text-gray-200 transition-colors gradient-text">Liên Hệ</a>
+            </div>
+            <button id="menuToggle" class="md:hidden text-2xl" aria-label="Mở menu di động">☰</button>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden frosted-glass text-white px-4 py-2">
+            <a href="#gioi-thieu" class="block py-2 hover:text-gray-200 gradient-text">Giới Thiệu</a>
+            <a href="#tinh-nang" class="block py-2 hover:text-gray-200 gradient-text">Tính Năng</a>
+            <a href="#tham-gia" class="block py-2 hover:text-gray-200 gradient-text">Tham Gia</a>
+            <a href="#nhan-thong-bao" class="block py-2 hover:text-gray-200 gradient-text">Nhận Thông Báo</a>
+            <a href="#faq" class="block py-2 hover:text-gray-200 gradient-text">FAQ</a>
+            <a href="#lien-he" class="block py-2 hover:text-gray-200 gradient-text">Liên Hệ</a>
+        </div>
+    </nav>
+
+    <!-- Header with Carousel and Particles -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-32 mt-16 relative overflow-hidden parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=80');">
+        <canvas id="particles" class="absolute inset-0"></canvas>
+        <div class="container mx-auto text-center px-4 relative z-10">
+            <div id="carousel" class="carousel">
+                <div class="carousel-slide active">
+                    <h1 class="text-4xl md:text-6xl font-bold gradient-text">Chinh Phục Tri Thức!</h1>
+                    <p class="mt-4 text-lg md:text-xl max-w-2xl mx-auto">Học nhóm, chia sẻ kiến thức, và đạt điểm cao cùng cộng đồng!</p>
+                </div>
+                <div class="carousel-slide">
+                    <h1 class="text-4xl md:text-6xl font-bold gradient-text">Kho Tài Liệu Miễn Phí!</h1>
+                    <p class="mt-4 text-lg md:text-xl max-w-2xl mx-auto">Đề thi, bài giảng, ghi chú – tất cả trong tầm tay!</p>
+                </div>
+                <div class="carousel-slide">
+                    <h1 class="text-4xl md:text-6xl font-bold gradient-text">Mentor Hỗ Trợ 24/7!</h1>
+                    <p class="mt-4 text-lg md:text-xl max-w-2xl mx-auto">Đội ngũ mentor luôn đồng hành cùng bạn mọi lúc!</p>
+                </div>
+            </div>
+            <div class="flex justify-center space-x-4 mt-6">
+                <button id="prevSlide" class="text-white bg-blue-500 rounded-full p-2 hover:bg-blue-600 btn-cta" aria-label="Slide trước">◄</button>
+                <div id="carouselDots" class="flex justify-center space-x-2 mt-2">
+                    <span class="carousel-dot active" aria-label="Slide 1"></span>
+                    <span class="carousel-dot" aria-label="Slide 2"></span>
+                    <span class="carousel-dot" aria-label="Slide 3"></span>
+                </div>
+                <button id="nextSlide" class="text-white bg-blue-500 rounded-full p-2 hover:bg-blue-600 btn-cta" aria-label="Slide sau">►</button>
+            </div>
+            <a href="https://discord.gg/UGswFw4u7y" class="mt-8 inline-block text-white font-semibold py-3 px-10 rounded-full btn-cta" aria-label="Tham gia server Discord">Tỏa Sáng Ngay!</a>
+        </div>
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+    </header>
+
+    <!-- Giới thiệu -->
+    <section id="gioi-thieu" class="py-24 bg-gradient-to-b from-gray-100 to-gray-50">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold gradient-text">Hành Trình Học Tập Đầy Cảm Hứng</h2>
+            <p class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                Server Discord của chúng mình là nơi học sinh cấp 3 kết nối, học hỏi, và tỏa sáng. Với kho tài liệu miễn phí, mentor tận tâm, và cộng đồng năng động, mỗi ngày học tập là một cuộc phiêu lưu!
+            </p>
+            <div class="mt-8">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1280&q=80" alt="Hình ảnh học tập nhóm" class="w-full max-w-3xl mx-auto rounded-xl shadow-lg">
+            </div>
+            <a href="https://discord.gg/UGswFw4u7y" class="mt-8 inline-block text-white font-semibold py-3 px-10 rounded-full btn-cta" aria-label="Khám phá server Discord">Khám Phá Ngay!</a>
+        </div>
+    </section>
+
+    <!-- Tính năng nổi bật với tabs -->
+    <section id="tinh-nang" class="bg-white py-24">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center gradient-text">Tính Năng Nổi Bật</h2>
+            <div class="flex justify-center space-x-4 mt-6">
+                <button class="tab active px-4 py-2 rounded-full font-semibold" data-tab="tab1">Học Nhóm</button>
+                <button class="tab px-4 py-2 rounded-full font-semibold" data-tab="tab2">Tài Liệu</button>
+                <button class="tab px-4 py-2 rounded-full font-semibold" data-tab="tab3">Hỗ Trợ</button>
+            </div>
+            <div id="tab1" class="tab-content mt-10 active">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">🚀</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Học Nhóm Siêu Chất</h3>
+                        <p class="mt-3 text-gray-600">Tham gia học nhóm voice hoặc text, cùng giải bài tập và ôn thi hiệu quả!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">🎙️</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Voice Study Room</h3>
+                        <p class="mt-3 text-gray-600">Học nhóm qua voice channel, thảo luận trực tiếp với bạn bè!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">📅</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Lịch Học Nhóm</h3>
+                        <p class="mt-3 text-gray-600">Lịch học nhóm hàng tuần, dễ dàng tham gia bất kỳ lúc nào!</p>
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="tab-content mt-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">📚</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Kho Tài Liệu Miễn Phí</h3>
+                        <p class="mt-3 text-gray-600">Đề thi, bài giảng, ghi chú – mọi thứ bạn cần để học giỏi!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Tìm Kiếm Dễ Dàng</h3>
+                        <p class="mt-3 text-gray-600">Sử dụng lệnh tìm kiếm để lọc tài liệu theo môn học hoặc năm!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">📂</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Tổ Chức Gọn Gàng</h3>
+                        <p class="mt-3 text-gray-600">Tài liệu được sắp xếp theo môn và chủ đề, dễ dàng truy cập!</p>
+                    </div>
+                </div>
+            </div>
+            <div id="tab3" class="tab-content mt-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">💬</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Hỗ Trợ 24/7</h3>
+                        <p class="mt-3 text-gray-600">Mentor và admin luôn sẵn sàng giải đáp mọi thắc mắc!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">🔔</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Thông Báo Nhanh</h3>
+                        <p class="mt-3 text-gray-600">Nhận thông báo về bài tập và sự kiện ngay tức thì!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl shadow-lg card text-center">
+                        <div class="text-4xl mb-4">🤝</div>
+                        <h3 class="text-xl font-semibold text-blue-600">Cộng Đồng Hỗ Trợ</h3>
+                        <p class="mt-3 text-gray-600">Kết nối với hàng ngàn học sinh để hỗ trợ lẫn nhau!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cách tham gia -->
+    <section id="tham-gia" class="py-24 bg-gradient-to-b from-gray-100 to-gray-50">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold gradient-text">Sẵn Sàng Chinh Phục Tri Thức?</h2>
+            <p class="mt-6 text-lg text-gray-700 max-w-2xl mx-auto">
+                Chỉ vài bước để gia nhập cộng đồng học tập năng động nhất cho học sinh cấp 3:
+            </p>
+            <ol class="mt-8 text-left max-w-2xl mx-auto text-gray-700 space-y-4">
+                <li>1. Tải <a href="https://discord.com" class="text-blue-600 underline hover:text-purple-600 transition-colors" aria-label="Tải Discord">Discord</a> và tạo tài khoản miễn phí.</li>
+                <li>2. Nhấn vào <a href="https://discord.gg/UGswFw4u7y" class="text-blue-600 underline hover:text-purple-600 transition-colors" aria-label="Link mời server Discord">link mời</a> để gia nhập server.</li>
+                <li>3. Đọc nội quy và giới thiệu bản thân trong kênh #chao-mung.</li>
+                <li>4. Bắt đầu học tập, kết nối, và tỏa sáng!</li>
+            </ol>
+            <a href="https://discord.gg/UGswFw4u7y" class="mt-8 inline-block text-white font-semibold py-3 px-10 rounded-full btn-cta" aria-label="Tham gia server Discord ngay">Học Siêu Đỉnh!</a>
+        </div>
+    </section>
+
+    <!-- Nhận thông báo -->
+    <section id="nhan-thong-bao" class="py-24 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold gradient-text">Đừng Bỏ Lỡ Cơ Hội! 🚀</h2>
+            <p class="mt-6 text-lg text-gray-700 max-w-2xl mx-auto">
+                Tham gia kênh Discord để nhận thông báo về các webinar, thi thử, workshop kỹ năng, và nhiều sự kiện thú vị khác!
+            </p>
+            <a href="https://discord.gg/UGswFw4u7y" class="mt-8 inline-block text-white font-semibold py-3 px-10 rounded-full btn-cta" aria-label="Đăng ký nhận thông báo">Đăng Ký Ngay!</a>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-24 bg-gradient-to-b from-gray-100 to-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center gradient-text">Câu Hỏi Thường Gặp</h2>
+            <div class="mt-10 max-w-3xl mx-auto space-y-4">
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-lg border border-blue-200">
+                    <div class="accordion-toggle flex justify-between items-center p-4" aria-expanded="false">
+                        <h3 class="text-lg font-semibold text-gray-700">Discord là gì và cách sử dụng?</h3>
+                        <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <div class="accordion-content px-4">
+                        <p class="text-gray-600 pb-4">Discord là ứng dụng chat miễn phí hỗ trợ text, voice, và video. Tải tại <a href="https://discord.com" class="text-blue-600 underline" aria-label="Tải Discord">đây</a>, tạo tài khoản, và dùng link mời để tham gia server.</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-lg border border-blue-200">
+                    <div class="accordion-toggle flex justify-between items-center p-4" aria-expanded="false">
+                        <h3 class="text-lg font-semibold text-gray-700">Nội quy server là gì?</h3>
+                        <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <div class="accordion-content px-4">
+                        <p class="text-gray-600 pb-4">Nội quy yêu cầu tôn trọng, không spam, không chia sẻ nội dung không phù hợp. Ví dụ: không gửi quảng cáo hoặc tin nhắn gây rối.</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-lg border border-blue-200">
+                    <div class="accordion-toggle flex justify-between items-center p-4" aria-expanded="false">
+                        <h3 class="text-lg font-semibold text-gray-700">Ai có thể tham gia server?</h3>
+                        <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <div class="accordion-content px-4">
+                        <p class="text-gray-600 pb-4">Tất cả học sinh cấp 3 (lớp 10-12) đều được chào đón, bất kể bạn ở đâu hay học trường nào!</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-lg border border-blue-200">
+                    <div class="accordion-toggle flex justify-between items-center p-4" aria-expanded="false">
+                        <h3 class="text-lg font-semibold text-gray-700">Làm sao để tìm tài liệu?</h3>
+                        <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <div class="accordion-content px-4">
+                        <p class="text-gray-600 pb-4">Server có kênh #📁・𝙏à𝙞-𝙡𝙞ệ𝙪 với đề thi, bài giảng, ghi chú. Dùng lệnh tìm kiếm như "!tim toan 2023" để lọc tài liệu.</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-lg border border-blue-200">
+                    <div class="accordion-toggle flex justify-between items-center p-4" aria-expanded="false">
+                        <h3 class="text-lg font-semibold text-gray-700">Làm sao để nhận thông báo sự kiện?</h3>
+                        <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                    <div class="accordion-content px-4">
+                        <p class="text-gray-600 pb-4">Tham gia server và bật thông báo tại kênh #📢・𝐀𝐧𝐧𝐨𝐮𝐧𝐜𝐞𝐦𝐞𝐧𝐭 để không bỏ lỡ sự kiện!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liên hệ -->
+    <section id="lien-he" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-24 relative">
+        <canvas id="footer-particles" class="absolute inset-0"></canvas>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold gradient-text">Liên Hệ Để Tỏa Sáng! 🌟</h2>
+            <p class="mt-6 text-lg max-w-2xl mx-auto">
+                Có thắc mắc? Đội ngũ của chúng mình luôn sẵn sàng hỗ trợ bạn 24/7!
+            </p>
+            <p class="mt-4">Email: <a href="mailto:your-email@example.com" class="underline hover:text-gray-200 transition-colors" aria-label="Gửi email liên hệ">your-email@example.com</a></p>
+            <p class="mt-2">Discord: <span class="font-semibold">@AdminTeam</span></p>
+            <a href="https://discord.gg/UGswFw4u7y" class="mt-8 inline-block text-white font-semibold py-3 px-10 rounded-full btn-cta" aria-label="Tham gia server Discord">Gia Nhập Hôm Nay!</a>
+            <p class="mt-6 text-sm">Nhận thông báo về sự kiện? <a href="https://discord.gg/UGswFw4u7y" class="underline hover:text-gray-200" aria-label="Đăng ký nhận thông báo sự kiện">Đăng ký tại đây!</a></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="frosted-glass text-white py-12 relative">
+        <canvas id="footer-particles" class="absolute inset-0"></canvas>
+        <div class="container mx-auto text-center px-4 relative z-10">
+            <p class="text-sm">© 2025 Server Discord Học Tập Cấp 3. Cùng nhau chinh phục tri thức!</p>
+            <div class="mt-4 flex justify-center space-x-6">
+                <a href="https://discord.gg/UGswFw4u7y" class="text-2xl social-icon" aria-label="Kênh Discord">📡</a>
+                <a href="https://www.youtube.com/@MusicPremium-2k10" class="text-2xl social-icon disabled" aria-label="YouTube">📺</a>
+                <a href="https://www.facebook.com/le.trung.kien.2k10" class="text-2xl social-icon disabled" aria-label="Facebook">📘</a>
+                <a href="https://www.google.com" class="text-2xl social-icon" aria-label="Google">🔍</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="text-white" aria-label="Cuộn lên đầu trang">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <!-- Music Player -->
+    <div class="music-controls">
+        <audio id="backgroundMusic" src="music.mp3" loop></audio>
+        <button id="playPauseBtn" class="text-lg btn-cta p-2 rounded-full">
+            <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            </svg>
+            <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.display = 'none', 500);
+            }, 3000);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                if (window.innerWidth < 768) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('slide-up');
+                    document.body.style.overflow = '';
+                    document.body.style.backdropFilter = '';
+                }
+            });
+        });
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            console.log('Scroll to top clicked');
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('slide-up');
+            document.body.style.overflow = mobileMenu.classList.contains('hidden') ? '' : 'hidden';
+            document.body.style.backdropFilter = mobileMenu.classList.contains('hidden') ? '' : 'blur(5px)';
+            console.log('Mobile menu toggled');
+        });
+
+        // Carousel
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        let currentSlide = 0;
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+        document.getElementById('nextSlide').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        });
+        document.getElementById('prevSlide').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        });
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 5000);
+
+        // Accordion for FAQ
+        document.querySelectorAll('.accordion-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                toggle.classList.toggle('active');
+                content.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', toggle.classList.contains('active'));
+            });
+        });
+
+        // Particle effect
+        function createParticles(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+            const particlesArray = [];
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 4 + 1;
+                    this.speedX = Math.random() * 0.3 - 0.15;
+                    this.speedY = Math.random() * 0.3 - 0.15;
+                    this.color = `hsl(${Math.random() * 60 + 220}, 70%, 50%)`;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.size > 0.2) this.size -= 0.05;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            function initParticles() {
+                for (let i = 0; i < 30; i++) {
+                    particlesArray.push(new Particle());
+                }
+            }
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+                    if (particlesArray[i].size <= 0.2) {
+                        particlesArray.splice(i, 1);
+                        i--;
+                        particlesArray.push(new Particle());
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            initParticles();
+            animateParticles();
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+            });
+        }
+        createParticles('particles');
+        createParticles('footer-particles');
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        const musicControls = document.querySelector('.music-controls');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            musicControls.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+            darkModeIcon.innerHTML = document.body.classList.contains('dark') 
+                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>'
+                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+            musicControls.classList.add('dark');
+            darkModeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+        }
+
+        // Scroll reveal animation (tắt để tránh nhấp nháy)
+        // const revealElements = document.querySelectorAll('.fade-in, .slide-up');
+        // const revealOnScroll = () => {
+        //     revealElements.forEach(el => {
+        //         const rect = el.getBoundingClientRect();
+        //         if (rect.top < window.innerHeight * 0.9) {
+        //             anime({
+        //                 targets: el,
+        //                 opacity: [0, 1],
+        //                 translateY: [30, 0],
+        //                 easing: 'easeOutExpo',
+        //                 duration: 1000
+        //             });
+        //         }
+        //     });
+        // };
+        // window.addEventListener('scroll', revealOnScroll);
+        // revealOnScroll();
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                const content = document.getElementById(tab.getAttribute('data-tab'));
+                content.classList.add('active');
+                anime({
+                    targets: content,
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    easing: 'easeOutExpo',
+                    duration: 500
+                });
+            });
+        });
+
+        // Music controls
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        playPauseBtn.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().catch(error => console.log("Lỗi phát nhạc:", error));
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                backgroundMusic.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        });
+
+        // Disable social icons with empty links
+        document.querySelectorAll('.social-icon').forEach(icon => {
+            if (!icon.getAttribute('href') || icon.getAttribute('href').includes('your-')) {
+                icon.classList.add('disabled');
+                icon.removeAttribute('href');
+            }
+        });
+    </script>
+</body>
+</html>
